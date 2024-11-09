@@ -1,46 +1,44 @@
+import { useState } from "react";
 import Card from "./Card";
 
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-
 function App() {
-  const [count, setCount] = useState(0)
+  const [productName, setProductName] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (productName.length < 3 || productName.startsWith(" ") || description.length < 6) {
+      setError(true);
+      setSubmitted(false);
+    } else {
+      setError(false);
+      setSubmitted(true);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-
-      {/* Nuevo título y formulario */}
-      <h1>Carga de estudiantes</h1>
-      <form>
-        {/* El formulario está vacío, se llenará en futuras clases */}
+    <div>
+      <h1>Agregar Producto</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Nombre del producto"
+          value={productName}
+          onChange={(e) => setProductName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Descripción del producto"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <button type="submit">Enviar</button>
       </form>
-
-      {/* Componente Card */}
-      <Card />
-    </>
+      {error && <p>Por favor chequea que la información sea correcta.</p>}
+      {submitted && !error && <Card productName={productName} description={description} />}
+    </div>
   );
 }
 
